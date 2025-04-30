@@ -1,0 +1,63 @@
+﻿@inherits LayoutComponentBase
+@inject Services.AuthService AuthService
+@inject NavigationManager NavigationManager
+
+<div class="page">
+    <header class="main-header">
+        <div class="container">
+            <div class="logo">
+                <img src="/images/logo.png" alt="BlogApp Logo" style="width:50px;height:auto;margin:0;">
+                <a href="/">BlogApp</a>
+            </div>
+            <NavMenu />
+            <div class="auth-actions">
+                @if (user != null)
+                {
+                    <a href="/profile" class="profile-link">@user.Email</a>
+                    <button class="btn btn-outline-danger" @onclick="Logout">Logout</button>
+                }
+                else
+                {
+                    <a href="/login" class="btn btn-outline-primary me-2">Login</a>
+                    <a href="/signup" class="btn btn-primary">Sign Up</a>
+                }
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <article class="content">
+            @Body
+        </article>
+    </main>
+</div>
+
+@code {
+    private Supabase.Gotrue.User? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await AuthService.GetUser();
+        AuthService.OnAuthStateChanged += RefreshState;
+    }
+
+    private void RefreshState()
+    {
+        InvokeAsync(async () =>
+        {
+            user = await AuthService.GetUser();
+            StateHasChanged();
+        });
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.SignOut();
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+
+    public void Dispose()
+    {
+        AuthService.OnAuthStateChanged -= RefreshState;
+    }
+}

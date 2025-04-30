@@ -1,0 +1,28 @@
+﻿@inject Services.AuthService AuthService
+@inject NavigationManager NavigationManager
+
+@if (user != null)
+{
+    <a href="/profile" class="me-3">@user.Email</a>
+    <button class="btn btn-outline-danger" @onclick="Logout">Logout</button>
+}
+else
+{
+    <a href="/login" class="btn btn-outline-primary me-2">Login</a>
+    <a href="/signup" class="btn btn-primary">Sign Up</a>
+}
+
+@code {
+    private Supabase.Gotrue.User? user;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await AuthService.GetUser();
+    }
+
+    private async Task Logout()
+    {
+        await AuthService.SignOut();
+        NavigationManager.NavigateTo("/", forceLoad: true);
+    }
+}

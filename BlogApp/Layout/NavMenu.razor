@@ -1,0 +1,33 @@
+﻿
+
+<nav class="main-nav">
+    <ul>
+        <li>
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill"></span> Home
+            </NavLink>
+        </li>
+        <li>
+            <NavLink class="nav-link" href="/posts">
+                <span class="bi bi-file-earmark-text"></span> Posts
+            </NavLink>
+        </li>
+        <li>
+            <NavLink class="nav-link" href="/create">
+                <span class="bi bi-plus-square"></span> Create
+            </NavLink>
+        </li>
+    </ul>
+</nav>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
+
+

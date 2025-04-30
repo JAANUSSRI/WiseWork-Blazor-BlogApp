@@ -1,0 +1,113 @@
+﻿@page "/create"
+@inject Services.AuthService AuthService
+@inject Services.PostService PostService
+@inject NavigationManager NavigationManager
+@using BlogApp.Models;
+
+<div class="create-post">
+    <h1>Create New Post</h1>
+</div>
+
+@if (user == null)
+{
+    <div class="alert alert-warning">
+        Please <a href="/login">login</a> to create a post.
+    </div>
+}
+else
+{
+    <EditForm Model="post" OnValidSubmit="HandleSubmit">
+        <div class="create-post">
+            <div class="form-group mb-3">
+                <label for="title">Title</label>
+                <InputText id="title" @bind-Value="post.Title" class="form-control" />
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="content">Content</label>
+                <InputTextArea id="content" @bind-Value="post.Content" class="form-control" rows="10" />
+            </div>
+
+            <button type="submit" class="btn btn-primary">Publish</button>
+
+        </div>
+    </EditForm>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger mt-3">@errorMessage</div>
+    }
+}
+
+@code {
+    private Supabase.Gotrue.User? user;
+    private Post post = new();
+    private string errorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await AuthService.GetUser();
+    }
+
+    // private async Task HandleSubmit()
+    // {
+    //     try
+    //     {
+    //         if (user != null)
+    //         {
+    //             post.AuthorId = user.Id;
+    //             post.AuthorEmail = user.Email ?? string.Empty;
+    //             post.Summary = post.Content.Length > 100
+    //                 ? post.Content[..100] + "..."
+    //                 : post.Content;
+
+    //             await PostService.CreatePostAsync(post);
+    //             NavigationManager.NavigateTo("/posts");
+    //         }
+    //     }
+    //     catch (Exception ex)
+    //     {
+    //         errorMessage = ex.Message;
+    //     }
+    // }
+
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            if (user != null)
+            {
+                var newPost = new Post
+                    {
+                        Title = post.Title,
+                        Content = post.Content,
+                        Summary = post.Content.Length > 100
+                            ? post.Content[..100] + "..."
+                            : post.Content,
+                        AuthorId = user.Id,
+                        AuthorEmail = user.Email ?? string.Empty,
+                        CreatedAt = DateTime.UtcNow,
+                        UpdatedAt = DateTime.UtcNow
+                    };
+
+                //var response = await PostService.CreatePostAsync(newPost);
+                await PostService.CreatePostAsync(newPost);
+                NavigationManager.NavigateTo("/posts");
+
+                // if (response.IsSuccessStatusCode)
+                // {
+                //     NavigationManager.NavigateTo("/posts");
+                // }
+                // else
+                // {
+                //     errorMessage = await response.Content.ReadAsStringAsync();
+                // }
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error: {ex.Message}";
+        }
+    }
+}

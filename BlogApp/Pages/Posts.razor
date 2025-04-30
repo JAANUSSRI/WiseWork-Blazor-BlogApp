@@ -1,0 +1,144 @@
+﻿@page "/posts"
+@inject Services.AuthService AuthService
+@inject Services.PostService PostService
+@using BlogApp.Models
+
+@* <h1>Recent Posts</h1> *@
+
+@if (user == null)
+{
+    <div class="alert alert-info">
+        Please <a href="/login">login</a> to view all posts.
+    </div>
+}
+else
+{
+    <!-- Adding search bar -->
+    <div class="search-container mb-4">
+        <div class="input-group">
+            <input type="text"
+                   class="form-control"
+                   placeholder="Search posts..."
+                   @bind="searchQuery" />
+            <button class="btn btn-outline-secondary" type="button" @onclick="SearchPosts">
+                <i class="bi bi-search"></i>
+            </button>
+        </div>
+    </div>
+
+    @if (posts == null)
+    {
+        <div class="text-center">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+        </div>
+    }
+    else if (showFilteredPosts && !filteredPosts.Any())
+    {
+        <div class="alert alert-warning">
+            No posts found matching your search.
+        </div>
+    }
+    else
+    {
+        <div class="posts-container">
+            @foreach (var post in showFilteredPosts ? filteredPosts : posts)
+            {
+                <div class="post-card">
+                    <h3>@post.Title</h3>
+                    <p>@post.Summary</p>
+                    <div class="post-meta">
+                        <span>By @post.AuthorEmail</span>
+                        <span>@post.CreatedAt.ToShortDateString()</span>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <a href="/post/@post.Id" class="btn btn-outline-primary">Read More</a>
+                        <button @onclick="() => ToggleLike(post.Id)" class="btn btn-outline-secondary like-button">
+                            <i class="bi @(likedPosts.GetValueOrDefault(post.Id) ? "bi-hand-thumbs-up-fill text-success" : "bi-hand-thumbs-up")"></i>
+                            <span class="ms-1">@(likeCounts.GetValueOrDefault(post.Id, 0))</span>
+                        </button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+}
+
+@code {
+    private Supabase.Gotrue.User? user;
+    private List<Post>? posts;
+    private List<Post> filteredPosts = new();
+    private Dictionary<string, bool> likedPosts = new();
+    private Dictionary<string, int> likeCounts = new();
+    private string searchQuery = string.Empty;
+    private bool showFilteredPosts = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = await AuthService.GetUser();
+
+        if (user != null)
+        {
+            try
+            {
+                posts = await PostService.GetPostsAsync();
+
+                if (posts != null)
+                {
+                    foreach (var post in posts)
+                    {
+                        likedPosts[post.Id] = await PostService.CheckLikeAsync(post.Id, user.Id);
+                        likeCounts[post.Id] = await PostService.GetLikeCountAsync(post.Id);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error loading posts: {ex.Message}");
+            }
+        }
+    }
+
+    private void SearchPosts()
+    {
+        showFilteredPosts = !string.IsNullOrWhiteSpace(searchQuery);
+
+        if (showFilteredPosts && posts != null)
+        {
+            var query = searchQuery.ToLower();
+            filteredPosts = posts.Where(p =>
+                p.Title.ToLower().Contains(query) ||
+                p.Content.ToLower().Contains(query) ||
+                p.Summary.ToLower().Contains(query) ||
+                p.AuthorEmail.ToLower().Contains(query)
+            ).ToList();
+        }
+    }
+
+    private async Task ToggleLike(string postId)
+    {
+        if (user == null) return;
+
+        try
+        {
+            var isLiked = await PostService.ToggleLikeAsync(
+                postId,
+                user.Id,
+                user.Email ?? string.Empty);
+
+            if (isLiked != likedPosts.GetValueOrDefault(postId))
+            {
+                likedPosts[postId] = isLiked;
+                likeCounts[postId] = await PostService.GetLikeCountAsync(postId);
+                StateHasChanged();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error toggling like: {ex.Message}");
+        }
+    }
+
+}
+
