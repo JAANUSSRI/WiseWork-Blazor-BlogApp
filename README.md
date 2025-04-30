@@ -24,6 +24,26 @@ A  blog application built with Blazor WebAssembly, .NET 8, MongoDB, and Supabase
 - MongoDB Atlas account or local MongoDB instance
 - Supabase account
 
+## HomePage
+
+![HomePage](https://github.com/user-attachments/assets/76c69aeb-02a1-41e7-94c0-3e73b853bd62)
+
+## LoginPage
+
+![LoginPage](https://github.com/user-attachments/assets/13a7b4b9-01dd-4613-8e07-ad88888b27e9)
+
+## PostsPage
+
+![PostsPage](https://github.com/user-attachments/assets/067c6e1d-184b-43fd-9c12-ff75b83539c4)
+
+## SearchPost
+
+![Search](https://github.com/user-attachments/assets/7fce0657-3b19-4ba6-b2fb-cc586e5f17e3)
+
+## CreatePost
+
+![CreatePost](https://github.com/user-attachments/assets/3869892c-cc8d-44c4-8efc-a2e33d574021)
+
 
 
 
