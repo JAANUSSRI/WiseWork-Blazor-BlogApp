@@ -132,5 +132,13 @@ namespace BlogApp.Services
             var result = await response.Content.ReadFromJsonAsync<LikeCountResponse>();
             return result?.Count ?? 0;
         }
+        public async Task<Post?> GetPostAsync(string postId)
+        {
+            return await _http.GetFromJsonAsync<Post>($"api/posts/{postId}");
+
+        }
     }
+
+
+
 }

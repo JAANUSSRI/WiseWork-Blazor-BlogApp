@@ -102,6 +102,22 @@ namespace BlogApp.Server.Controllers
             //{
             //    return StatusCode(500, $"Internal server error: {ex.Message}");
             //}
+
+
+        }
+
+        // Add to BlogApp.Server/Controllers/PostsController.cs
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Post>> Get(string id)
+        {
+            var post = await _mongoDBService.Posts.Find(p => p.Id == id).FirstOrDefaultAsync();
+
+            if (post == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(post);
         }
     }
 }

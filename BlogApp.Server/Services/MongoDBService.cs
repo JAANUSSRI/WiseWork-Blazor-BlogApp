@@ -43,6 +43,7 @@ namespace BlogApp.Server.Services
         public IMongoCollection<Post> Posts => _database.GetCollection<Post>("Posts");
         public IMongoCollection<UserProfile> Profiles => _database.GetCollection<UserProfile>("Profiles");
         public IMongoCollection<Like> Likes => _database.GetCollection<Like>("Likes");
+        public IMongoCollection<Comment> Comments => _database.GetCollection<Comment>("Comments");
     }
 
     public class MongoDBSettings

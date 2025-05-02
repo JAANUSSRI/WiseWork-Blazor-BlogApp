@@ -1,6 +1,7 @@
 ﻿@page "/posts"
 @inject Services.AuthService AuthService
 @inject Services.PostService PostService
+@inject Services.CommentService CommentService
 @using BlogApp.Models
 
 @* <h1>Recent Posts</h1> *@
@@ -54,12 +55,19 @@ else
                     </div>
                     <div class="d-flex justify-content-between align-items-center mt-2">
                         <a href="/post/@post.Id" class="btn btn-outline-primary">Read More</a>
-                        <button @onclick="() => ToggleLike(post.Id)" class="btn btn-outline-secondary like-button">
-                            <i class="bi @(likedPosts.GetValueOrDefault(post.Id) ? "bi-hand-thumbs-up-fill text-success" : "bi-hand-thumbs-up")"></i>
-                            <span class="ms-1">@(likeCounts.GetValueOrDefault(post.Id, 0))</span>
-                        </button>
+                        <div class="d-flex align-items-center">
+                            <button @onclick="() => ToggleLike(post.Id)" class="btn btn-outline-secondary like-button me-2">
+                                <i class="bi @(likedPosts.GetValueOrDefault(post.Id) ? "bi-hand-thumbs-up-fill text-success" : "bi-hand-thumbs-up")"></i>
+                                <span class="ms-1">@(likeCounts.GetValueOrDefault(post.Id, 0))</span>
+                            </button>
+                            <span class="text-muted">
+                                <i class="bi bi-chat-left-text"></i>
+                                @(commentCounts.GetValueOrDefault(post.Id, 0))
+                            </span>
+                        </div>
                     </div>
                 </div>
+
             }
         </div>
     }
@@ -73,6 +81,7 @@ else
     private Dictionary<string, int> likeCounts = new();
     private string searchQuery = string.Empty;
     private bool showFilteredPosts = false;
+    private Dictionary<string, int> commentCounts = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,6 +99,7 @@ else
                     {
                         likedPosts[post.Id] = await PostService.CheckLikeAsync(post.Id, user.Id);
                         likeCounts[post.Id] = await PostService.GetLikeCountAsync(post.Id);
+                        commentCounts[post.Id] = await CommentService.GetCommentCountAsync(post.Id);
                     }
                 }
             }

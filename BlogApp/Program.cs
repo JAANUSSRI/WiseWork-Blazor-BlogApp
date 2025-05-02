@@ -33,5 +33,6 @@ builder.Services.AddScoped(provider =>
 builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<PostService>();
 builder.Services.AddScoped<ProfileService>();
+builder.Services.AddScoped<CommentService>();
 
 await builder.Build().RunAsync();

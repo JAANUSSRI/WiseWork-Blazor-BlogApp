@@ -234,6 +234,38 @@ main {
     align-items: center;
 }
 
+.comment-post{
+    margin-top:2rem;
+}
+
+.post-content {
+    white-space: pre-line;
+    margin-bottom: 1.5rem;
+    line-height: 1.8;
+}
+
+.comments-section {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.comment-card {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6 !important;
+}
+
+.comment-meta {
+    font-size: 0.9rem;
+}
+
+.comment-content {
+    white-space: pre-line;
+}
+
 /* Buttons */
 .btn {
     display: inline-block;
@@ -370,7 +402,7 @@ main {
     }
 
         .search-container button:hover {
-            background-color: #f8f9fa;
+            background-color: black;
         }
 
 /* Responsive adjustments */
