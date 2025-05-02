@@ -84,7 +84,6 @@ namespace BlogApp.Services
         //    return await _http.PostAsJsonAsync("api/posts", post);
         //}
 
-        // Add these methods to the PostService class
         public async Task<bool> ToggleLikeAsync(string postId, string userId, string userEmail)
         {
             try

@@ -1,5 +1,4 @@
-﻿// Path: BlogApp/Services/CommentService.cs
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using BlogApp.Models;
 using BlogApp.Server.Models;
 
