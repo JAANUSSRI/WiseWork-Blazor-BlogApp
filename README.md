@@ -42,11 +42,11 @@ A  blog application built with Blazor WebAssembly, .NET 8, MongoDB, and Supabase
 
 ![PostDetails-Comments](https://github.com/user-attachments/assets/34d57ea8-e746-4517-bfc6-51cc1121f013)
 
-## SearchPost
+## Search Post
 
 ![Search](https://github.com/user-attachments/assets/7fce0657-3b19-4ba6-b2fb-cc586e5f17e3)
 
-## CreatePost
+## Create New Post
 
 ![CreatePost](https://github.com/user-attachments/assets/3869892c-cc8d-44c4-8efc-a2e33d574021)
 
