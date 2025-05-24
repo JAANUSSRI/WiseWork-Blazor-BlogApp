@@ -33,7 +33,7 @@ A  blog application built with Blazor WebAssembly, .NET 8, MongoDB, and Supabase
 
 ![LoginPage](https://github.com/user-attachments/assets/13a7b4b9-01dd-4613-8e07-ad88888b27e9)
 
-## Posts Page with comments count
+## Posts Page with likes count
 
 ![PostsPage](https://github.com/user-attachments/assets/067c6e1d-184b-43fd-9c12-ff75b83539c4)
 
